@@ -119,9 +119,12 @@ function compileProg(runProg) {
     $.post("cgi-bin/compileCode.cgi", {'code' : code, 'run' : (runProg ? 'true' : 'false')})
         .done(function(compileOutput) {
             console.log(compileOutput);
-            var current_cpp_console = cpp_console.getValue()
+            //var current_cpp_console = cpp_console.getValue()
+            var current_cpp_console = ""
             if(compileOutput['compileErrors'] == "") {
-                cpp_console.setValue(current_cpp_console+"Program compiled successfully.\n\n");
+                cpp_console.setValue(current_cpp_console+"Program compiled successfully. ("
+                    +compileOutput['tempPath']
+                    +")\n\n");
                 // print run output if necessary
                 if (runProg) {
                     current_cpp_console = cpp_console.getValue()
@@ -130,6 +133,8 @@ function compileProg(runProg) {
                         +compileOutput['runOutput']
                         +'\n\nRun errors:\n'
                         +compileOutput['runErrors']
+                        +'\n\nTimed out? '
+                        +(compileOutput['returnCode'] == '124' ? 'TIMED OUT' : 'No')
                         +'\n\n');
 
                 }
