@@ -123,9 +123,8 @@ function compileProg(runProg) {
             //var current_cpp_console = cpp_console.getValue()
             var current_cpp_console = ""
             if(compileOutput['compileErrors'] == "") {
-                cpp_console.setValue(current_cpp_console+"Program compiled successfully. ("
-                    +compileOutput['tempPath']
-                    +")\n\n");
+                cpp_console.setValue(current_cpp_console+"Program compiled successfully."
+                    +"\n\n");
                 // print run output if necessary
                 if (runProg) {
                     current_cpp_console = cpp_console.getValue()
