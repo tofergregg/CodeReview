@@ -9,7 +9,7 @@
   <body onload="init()">
   <table>
       <tr>
-          <td>Course</td> <td>Assignment</td> <td>Problem</td> <td>Student</td>
+          <td>Course</td> <td>Assignment</td> <td>Problem</td> <td>Student</td><td>Timeout</td>
           <td style="text-align:center; display:visible;border:none;"><img id="spinner" src="img/spinner.gif" width="30px"></td>
       </tr>
       <tr>
@@ -29,6 +29,15 @@
               <select id="student" onChange="studentChanged()">
               </select>
           </td> 
+          <td>
+              <select id="timeout">
+                  <option value='1'>1 second</option>
+                  <option value='5' selected='selected'>5 seconds</option>
+                  <option value='10'>10 seconds</option>
+                  <option value='25'>25 seconds</option>
+                  <option value='100'>60 seconds</option>
+              </select>
+          </td>
           <td><button type="button" onclick="compileProg(false)">Compile</button></td> 
           <td><button type="button" onclick="compileProg(true)">Run</button></td>
       </tr>

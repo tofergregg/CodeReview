@@ -116,7 +116,8 @@ function compileProg(runProg) {
     // if runProg is true, will run the program
     setSpinner(true);
     var code=editor.getValue();
-    $.post("cgi-bin/compileCode.cgi", {'code' : code, 'run' : (runProg ? 'true' : 'false')})
+    var timeout = $("#timeout")[0].value;
+    $.post("cgi-bin/compileCode.cgi", {'code' : code, 'run' : (runProg ? 'true' : 'false'), 'timeout' : timeout})
         .done(function(compileOutput) {
             console.log(compileOutput);
             //var current_cpp_console = cpp_console.getValue()
