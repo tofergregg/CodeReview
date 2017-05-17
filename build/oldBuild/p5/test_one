@@ -1,0 +1,25 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo -n "Username? "
+    read username
+else
+    username=$1
+fi
+
+cat traveling_template.cpp ../student_answers/p5_$username.txt \
+        >| TravelingSalesman/src/traveling_salesman.cpp
+touch TravelingSalesman/src/traveling_salesman.cpp
+sleep 2 # wait for OS to catch up for Make
+
+make
+
+if [ $? -eq 0 ]; then
+        echo "Compiled!"
+else
+        echo "Did not compile!"
+        exit -1
+fi
+echo
+./test_traveling
+

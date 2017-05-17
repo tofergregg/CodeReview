@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Editor</title>
+  <link rel="stylesheet" type="text/css" href="css/codeReview.css">
+  </head>
+  <body onload="init()">
+  <table>
+      <tr>
+          <td>Course</td> <td>Assignment</td> <td>Problem</td> <td>Student</td>
+      </tr>
+      <tr>
+          <td>
+              <select id="course" onChange="courseChanged()">
+              </select>
+          </td>
+          <td>
+              <select id="assn" onChange="assnChanged()">
+              </select>
+          </td> 
+          <td>
+              <select id="problem" onChange="problemChanged()">
+              </select>
+          </td> 
+          <td>
+              <select id="student" onChange="studentChanged()">
+              </select>
+          </td> 
+          <td><button type="button">Compile</button></td> 
+          <td><button type="button">Run</button></td>
+      </tr>
+  </table>
+  <table>
+      <tr><td>Code:</td></tr>
+      <tr>
+          <td>
+              <div id='editor' style="width:600px;height:300px"><pre>#include&lt;iostream>
+using namespace std;
+int main() {
+     cout &lt;&lt; "Hello, World!" &lt;&lt; endl;
+     return 0;
+}</pre>
+
+              </div>
+          </td>
+      </tr>
+
+      <tr> <td>Console:</td> </tr>
+      <tr>
+          <td><div id='cpp_console' style="width:600px;height:300px"></div></td>
+      </tr>
+
+  </table>
+  </body>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="js/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/codeReview.js"></script>
+  </html>

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo -n "Username? "
+    read username
+else
+    username=$1
+fi
+
+cat seq_decode_template.cpp ../student_answers/p2_$username.txt \
+        >| SequenceDecode/src/sequence_decode.cpp
+touch SequenceDecode/src/sequence_decode.cpp
+sleep 2 # wait for OS to catch up for Make
+
+make
+
+if [ $? -eq 0 ]; then
+        echo "Compiled!"
+else
+        echo "Did not compile!"
+        exit -1
+fi
+echo
+./test_decode

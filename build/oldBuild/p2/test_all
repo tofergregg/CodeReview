@@ -1,0 +1,8 @@
+#!/bin/bash
+
+for f in `ls ../student_answers/p2*`; do
+    username=`echo $f | cut -d_ -f3 | cut -d. -f1`
+    echo Testing $username
+    ./test_one $username
+done
+

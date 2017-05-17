@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]; then
+    echo -n "Search string? "
+    read search
+else
+    search=$1
+fi
+swhois $search
