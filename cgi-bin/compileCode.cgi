@@ -31,7 +31,7 @@ else:
 print("Content-Type: text/json\n")
 
 # add all Stanford Headers to the code
-code = '#include "allStanfordHeaders.h"\n' + code
+#code = '#include "allStanfordHeaders.h"\n' + code
 
 # save the code to a file where we will compile it
 # using the Makefile

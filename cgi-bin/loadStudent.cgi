@@ -19,9 +19,12 @@ studentName = form.getvalue('studentName')
 
 print("Content-Type: text/plain\n")
 
+# create template that starts with including all Stanford lib headers
+template = '#include "allStanfordHeaders.h"\n'
+
 # read in the tester code
 with open(COURSE_DIR + searchDir + "/" + "_testCode.cpp") as f:
-    template = f.read()
+    template += f.read()
 
 # read in the student's code
 with open(COURSE_DIR + searchDir + "/" + studentName) as f:
