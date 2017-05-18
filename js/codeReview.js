@@ -8,7 +8,7 @@ cpp_console.setTheme("ace/theme/eclipse");
 cpp_console.session.setMode("ace/mode/text");
 cpp_console.$blockScrolling = Infinity
 
-function init() {
+function initCodeReview() {
     console.log("Initializing...");
     
     // get a list of courses

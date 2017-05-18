@@ -1,0 +1,3 @@
+AuthType WebAuth
+Require privgroup ~cgregg:spring2017_106b
+#Require none 
