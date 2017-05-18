@@ -21,7 +21,7 @@
 #define MULTIPLIER 1103515245
 #define OFFSET 12345
 
-static int _seed = 1;
+//static int _seed = 1;
 
 #undef rand
 #define rand() ((_seed = MULTIPLIER * _seed + OFFSET) & 0x7FFFFFFF)

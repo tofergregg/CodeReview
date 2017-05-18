@@ -6,6 +6,7 @@ cgitb.enable()
 import os,cgi,json,sys
 
 COURSE_DIR="../course/"
+HEADER_FILE="allStanfordHeaders.h"
 STUDENT_REPLACE = "//@@ student code here"
 STUDENT_START = "\n// STUDENT CODE STARTS HERE\n"
 STUDENT_END = "\n// STUDENT CODE ENDS HERE\n"
@@ -18,9 +19,12 @@ studentName = form.getvalue('studentName')
 
 print("Content-Type: text/plain\n")
 
+# create a template that starts with including all stanford headers
+template = '#include "allStanfordHeaders.h"\n'
+
 # read in the tester code
 with open(COURSE_DIR + searchDir + "/" + "_testCode.cpp") as f:
-    template = f.read()
+    template += f.read()
 
 # read in the student's code
 with open(COURSE_DIR + searchDir + "/" + studentName) as f:
