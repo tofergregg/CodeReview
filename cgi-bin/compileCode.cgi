@@ -4,6 +4,7 @@ import cgitb
 cgitb.enable()
 
 import os,cgi,json,sys,tempfile,shutil,subprocess
+import MySQLdb
 
 COURSE_DIR="../course/"
 BUILD_DIR=COURSE_DIR+"build/"

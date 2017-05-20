@@ -2,3 +2,4 @@
 *.swp
 js/src-noconflict/*
 *.o
+cgi-bin/settings.txt
