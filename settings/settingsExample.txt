@@ -1,0 +1,7 @@
+{"username": "database_username", 
+  "db": "database_name", 
+  "pw": "super_secret_password", 
+  "server": "server_address",
+  "table" : "table_to_use"
+}
+
