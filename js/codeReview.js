@@ -16,25 +16,34 @@ function initCodeReview() {
 }
 
 function getCourses(mainDir) {
-    getDirInfo(mainDir,function(data) {
+    getDirInfo('course',mainDir,function(data) {
         var courses = data
         console.log(courses)
         populateOptions("course",courses);
-        getAssn(mainDir+"/"+courses[0]);
+        getOffering(courses[0]);
     });
 }
 
-function getAssn(courseDir) {
-    getDirInfo(courseDir,function(data) {
+function getOffering(courseDir) {
+    getDirInfo('offering',courseDir,function(data) {
+        var offering = data
+        console.log(offering)
+        populateOptions("offering",offering);
+        getAssn(courseDir+'/'+offering[0]);
+    });
+}
+
+function getAssn(offeringDir) {
+    getDirInfo('assignment',offeringDir,function(data) {
         var assn = data
         console.log(assn)
         populateOptions("assn",assn);
-        getProblems(courseDir+"/"+assn[0]);
+        getProblems(offeringDir+'/'+assn[0]);
     });
 }
 
 function getProblems(assnDir) {
-    getDirInfo(assnDir,function(data) {
+    getDirInfo('problem',assnDir,function(data) {
         var problems = data
         console.log(problems)
         populateOptions("problem",problems);
@@ -43,7 +52,7 @@ function getProblems(assnDir) {
 }
 
 function getStudents(problemDir) {
-    getDirInfo(problemDir,function(data) {
+    getDirInfo('student',problemDir,function(data) {
         var students = data
         console.log(students)
         populateOptions("student",students);
@@ -54,7 +63,14 @@ function getStudents(problemDir) {
 function courseChanged() {
     setSpinner(true);
     var courseDir = $("#course")[0].value;
-    getAssn(courseDir);
+    getOffering(courseDir);
+}
+
+function offeringChanged() {
+    setSpinner(true);
+    var offeringDir = $("#course")[0].value + "/" +
+                 $("#offering")[0].value;
+    getAssn(offeringDir);
 }
 
 function assnChanged() {
@@ -93,8 +109,13 @@ function setSpinner(value) {
     spinner.style.visibility = (value == true ? 'visible' : 'hidden');
 }
 
-function getDirInfo(dir, callBack) {
-$.post( "cgi-bin/listdir.cgi", { "searchDir" : dir })
+//function getDirInfo(column, dir, callBack) {
+//    $.post( "cgi-bin/listdir.cgi", { "searchDir" : dir })
+//      .done(callBack);
+//}
+
+function getDirInfo(column, dir, callBack) {
+    $.post( "cgi-bin/listParts.cgi", { "column" : column, "searchDir" : dir })
       .done(callBack);
 }
 
