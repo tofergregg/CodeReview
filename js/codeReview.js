@@ -91,11 +91,16 @@ function problemChanged() {
 function studentChanged() {
     // start spinner
     setSpinner(true);
-    var searchDir = $("#course")[0].value + "/" +
-                 $("#assn")[0].value + "/" +
-                 $("#problem")[0].value;
+    var course = $("#course")[0].value;
+    var offering = $("#offering")[0].value;
+    var assn = $("#assn")[0].value;
+    var problem = $("#problem")[0].value;
     var studentName = $("#student")[0].value;
-    $.post("cgi-bin/loadStudent.cgi", {"searchDir" : searchDir,
+
+    $.post("cgi-bin/loadStudent.cgi", {"course" : course,
+        "offering" : offering,
+        "assignment" : assn,
+        "problem" : problem,
         "studentName" : studentName}).done(function(data) {
             editor.setValue(data);
             editor.clearSelection();
