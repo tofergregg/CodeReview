@@ -76,6 +76,7 @@ function offeringChanged() {
 function assnChanged() {
     setSpinner(true);
     var assnDir = $("#course")[0].value + "/" +
+                 $("#offering")[0].value + "/" +
                  $("#assn")[0].value;
     getProblems(assnDir);
 }
@@ -83,6 +84,7 @@ function assnChanged() {
 function problemChanged() {
     setSpinner(true);
     var problemDir = $("#course")[0].value + "/" +
+                 $("#offering")[0].value + "/" +
                  $("#assn")[0].value + "/" +
                  $("#problem")[0].value;
     getStudents(problemDir);
