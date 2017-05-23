@@ -56,7 +56,16 @@ function getStudents(problemDir) {
         var students = data
         console.log(students)
         populateOptions("student",students);
-        studentChanged(); 
+        getRevision(problemDir+"/" + students[0])
+    });
+}
+
+function getRevision(studentsDir) {
+    getDirInfo('revision',studentsDir,function(data) {
+        var revisions = data
+        console.log(revisions)
+        populateOptions("revision",revisions);
+        setSpinner(false);
     });
 }
 
@@ -91,6 +100,16 @@ function problemChanged() {
 }
 
 function studentChanged() {
+    setSpinner(true);
+    var studentDir = $("#course")[0].value + "/" +
+                 $("#offering")[0].value + "/" +
+                 $("#assn")[0].value + "/" +
+                 $("#problem")[0].value + "/" +
+                 $("#student")[0].value;
+    getRevision(studentDir);
+}
+
+function revisionChanged() {
     // start spinner
     setSpinner(true);
     var course = $("#course")[0].value;
@@ -98,12 +117,17 @@ function studentChanged() {
     var assn = $("#assn")[0].value;
     var problem = $("#problem")[0].value;
     var studentName = $("#student")[0].value;
+    var revision = $("#revision")[0].value;
+    if (revision == 'original') {
+       revision = '0'; // revert to numbers
+    } 
 
     $.post("cgi-bin/loadStudent.cgi", {"course" : course,
         "offering" : offering,
         "assignment" : assn,
         "problem" : problem,
-        "studentName" : studentName}).done(function(data) {
+        "studentName" : studentName,
+        "revision" : revision}).done(function(data) {
             editor.setValue(data);
             editor.clearSelection();
             // stop spinner
@@ -134,8 +158,14 @@ function populateOptions(id,options) {
         .end();
     for (var i=0; i < options.length; i++) {
         var opt = document.createElement('option');
-        opt.value = options[i];
-        opt.innerHTML = options[i];
+        console.log(id);
+        if (id == 'revision' && i == 0) {
+            opt.value = 'original';
+            opt.innerHTML = 'original';
+        } else {
+            opt.value = options[i];
+            opt.innerHTML = options[i];
+        }
         sel[0].appendChild(opt);
     }
 }

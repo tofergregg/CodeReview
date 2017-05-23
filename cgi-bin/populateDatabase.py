@@ -127,18 +127,18 @@ def processAll(args):
                        '%s', '', '%d'  )" % \
                (settings['table'],
                 args.course, args.offering, args.assignment, args.problem_number,
-                sunet,int(compileResult),db.escape_string(escCode), 0)
+                sunet,int(compileResult),escCode, 0)
         #print(sql)
-        #try:
-        # Execute the SQL command
-        cursor.execute(sql)
-        # Commit your changes in the database
-        db.commit()
-        print("committed to db")
-        """except:
+        try:
+            # Execute the SQL command
+            cursor.execute(sql)
+            # Commit your changes in the database
+            db.commit()
+            print("committed to db")
+        except:
            # Rollback in case there is any error
            print("rolling back db")
-           db.rollback()"""
+           db.rollback()
 
     # disconnect from server
     db.close()

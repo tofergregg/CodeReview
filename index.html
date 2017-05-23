@@ -9,7 +9,8 @@
   <body onload="initCodeReview()">
   <table>
       <tr>
-          <td>Course</td> <td>Offering</td> <td>Assignment</td> <td>Problem</td> <td>Student</td><td>Timeout</td>
+          <td>Course</td> <td>Offering</td> <td>Assignment</td> <td>Problem</td> 
+          <td>Student</td><td>Rev.</td><td>Timeout</td>
           <td style="text-align:center; display:visible;border:none;"><img id="spinner" src="img/spinner.gif" width="30px"></td>
       </tr>
       <tr>
@@ -32,7 +33,12 @@
           <td>
               <select id="student" onChange="studentChanged()">
               </select>
-          </td> 
+          </td>
+          <td>
+              <select id="revision" onChange="revisionChanged()">
+                  <option value='original' selected='selected'>original</option>
+              </select>
+          </td>
           <td>
               <select id="timeout">
                   <option value='1'>1 second</option>
@@ -70,5 +76,5 @@ int main() {
   </body>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
   <script src="js/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-  <script src="js/codeReview.js?3"></script>
+  <script src="js/codeReview.js?5"></script>
   </html>

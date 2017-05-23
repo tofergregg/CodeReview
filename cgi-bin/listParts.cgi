@@ -13,7 +13,7 @@ def natural_key(string_):
     return [int(s) if s.isdigit() else s for s in re.split(r'(\d+)', string_)]
 
 def parse_arguments():
-        parser = argparse.ArgumentParser(description='Populate mysql database with student exam responses')
+        parser = argparse.ArgumentParser(description='Return a set of responses for a query')
         parser.add_argument('column',
                            help='The column you want to return data from. E.g., course, offering, assignment, problem, student')
         parser.add_argument('course',
@@ -28,6 +28,9 @@ def parse_arguments():
         parser.add_argument('problem',
                            help='The problem (default is blank)',
                            nargs='?',const='')
+        parser.add_argument('student',
+                           help='The student (default is blank)',
+                           nargs='?',const='')
 
         args = parser.parse_args()
 
@@ -41,9 +44,10 @@ def processArgsForMySql(args):
         partialQuery += "offering='" + args.offering + "' and "
     if args.assignment:
         partialQuery += "assignment='" + args.assignment + "' and "
-    irint(searchDirSplit)
     if args.problem:
-        partialQuery += "problem='" + args.problem + "'"
+        partialQuery += "problem='" + args.problem + "' and "
+    if args.student:
+        partialQuery += "student='" + args.student + "'"
     # remove trailing and if necessary
     if partialQuery.endswith(' and '):
         partialQuery = partialQuery[:-len(' and ')]
@@ -58,6 +62,7 @@ def processQueryForMySql(column, form):
     offering = ''
     assignment = ''
     problem = ''
+    student = ''
 
     searchDir = form.getvalue('searchDir')
 
@@ -69,7 +74,9 @@ def processQueryForMySql(column, form):
         partialQuery = ''
         return ''
 
-    if splitLen == 4:
+    if splitLen >= 5:
+        student = searchDirSplit[4]
+    if splitLen >= 4:
         problem = searchDirSplit[3]
     if splitLen >= 3:
         assignment = searchDirSplit[2]
@@ -87,7 +94,9 @@ def processQueryForMySql(column, form):
     if assignment:
         partialQuery += "assignment='" + assignment + "' and "
     if problem:
-        partialQuery += "problem='" + problem + "'"
+        partialQuery += "problem='" + problem + "' and "
+    if student:
+        partialQuery += "student='" + student + "'"
     # remove trailing and if necessary
     if partialQuery.endswith(' and '):
         partialQuery = partialQuery[:-len(' and ')]
@@ -119,7 +128,7 @@ def requestDistinctValues(column, partialQuery):
     cursor.execute(sql)
     
     # get all result
-    result = [x[0] for x in cursor.fetchall()]
+    result = [str(x[0]) for x in cursor.fetchall()]
     #print(result)
 
     # disconnect from server
@@ -135,7 +144,8 @@ if __name__ == "__main__":
     column = form.getvalue('column')
     partialQuery = processQueryForMySql(column, form)
 
-    queryResult = sorted(requestDistinctValues(column,partialQuery),key=natural_key)
+    distinctValues = requestDistinctValues(column,partialQuery)
+    queryResult = sorted(distinctValues,key=natural_key)
 
     print("Content-Type: text/json\n")
     print(json.dumps(queryResult))
