@@ -143,10 +143,27 @@ def processAll(args):
     # disconnect from server
     db.close()
 
+def getTerm(offering):
+    if offering.endswith('2'):
+        return "Fall"
+    if offering.endswith('4'):
+        return "Winter"
+    if offering.endswith('6'):
+        return "Spring"
+    if offering.endswith('8'):
+        return "Summer"
         
 if __name__ == "__main__":
-    print("You are about to add names to the database. Please type 'yes' to proceed.")
+    args = parse_arguments()
+    offeringTerm = getTerm(args.offering)
+    print("You are about to add names to the database")
+    print("with the following information:\n")
+    print("Course: %s\nOffering: %s (%s)" %
+            (args.course,args.offering,offeringTerm))
+    print("Assignment: %s\nProblem: %s\nProblem folder: %s\n" % 
+        (args.assignment,args.problem_number, args.problem_folder))
+    print("Please type 'yes' to proceed.")
     answer = raw_input()
     if answer == 'yes':
-        processAll(parse_arguments())
+        processAll(args)
 
