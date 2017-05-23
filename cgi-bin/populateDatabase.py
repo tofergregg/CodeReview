@@ -145,5 +145,8 @@ def processAll(args):
 
         
 if __name__ == "__main__":
-    processAll(parse_arguments())
+    print("You are about to add names to the database. Please type 'yes' to proceed.")
+    answer = raw_input()
+    if answer == 'yes':
+        processAll(parse_arguments())
 
