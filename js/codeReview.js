@@ -8,6 +8,11 @@ cpp_console.setTheme("ace/theme/eclipse");
 cpp_console.session.setMode("ace/mode/text");
 cpp_console.$blockScrolling = Infinity
 
+var good_code_console = ace.edit("good_code_console");
+good_code_console.setTheme("ace/theme/eclipse");
+good_code_console.session.setMode("ace/mode/c_cpp");
+good_code_console.$blockScrolling = Infinity
+
 function initCodeReview() {
     console.log("Initializing...");
     
@@ -48,6 +53,7 @@ function getProblems(assnDir) {
         //console.log(problems)
         populateOptions("problem",problems);
         getStudents(assnDir+"/"+problems[0]);
+        getSolutions(assnDir+"/"+problems[0]);
     });
 }
 
@@ -66,6 +72,14 @@ function getRevision(studentsDir) {
         //console.log(revisions)
         populateOptions("revision",revisions);
         revisionChanged();
+    });
+}
+
+function getSolutions(problemDir) {
+    getDirInfo('score',problemDir,function(data) {
+        var students = data
+        //console.log(students)
+        populateOptions("closeCode",students);
     });
 }
 
@@ -97,6 +111,7 @@ function problemChanged() {
                  $("#assn")[0].value + "/" +
                  $("#problem")[0].value;
     getStudents(problemDir);
+    getSolutions(problemDir);
 }
 
 function studentChanged() {

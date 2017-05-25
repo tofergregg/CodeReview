@@ -102,9 +102,9 @@ def saveCodeToDatabase(course, offering, assignment, problem, student, code, com
     revision = createDiff(origCode,code,db,cursor,settings['table'],
             course,offering,assignment,problem,student,compileResult)
     if compileResult:
-        revision = str(revision) + " (compiled)"
+        revision = str(revision) + " (c)"
     else:
-        revision = str(revision) + " (did not compile)"
+        revision = str(revision) + " (dnc)"
 
     # disconnect from server
     db.close()

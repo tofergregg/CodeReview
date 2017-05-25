@@ -4,4 +4,9 @@ body {
 tr,  td{
     border:1px solid black;
 }
-
+.dropdown {
+    min-width:80px !important;
+}
+.headerRow {
+    height:100px;
+}

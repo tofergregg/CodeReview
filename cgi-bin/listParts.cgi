@@ -122,11 +122,13 @@ def requestDistinctValues(column, partialQuery):
     # Get latest change
     # (old)select * from revision_table where course='cs106b' and offering='1176' and assignment='midterm' and problem='p2' order by revision desc limit 1;
     # new: select distinct revision from `revision_table` where...
-    if column != 'revision':
-        sql = "select distinct %s from `revision_table` %s" % (column,partialQuery)
-    else:
+    if column == 'revision':
         # also return compile result if we ask for revision
         sql = "select distinct %s,compile_result from `revision_table` %s" % (column,partialQuery)
+    elif column == 'score':
+        sql = "select distinct %s,student,unique_compile from `revision_table` %s and score=100" % (column,partialQuery)
+    else:
+        sql = "select distinct %s from `revision_table` %s" % (column,partialQuery)
     #print(sql)
     #try:
     # Execute the SQL command
@@ -135,17 +137,19 @@ def requestDistinctValues(column, partialQuery):
     # get all result
     fullResult = cursor.fetchall()
     #print(fullResult)
-    if column != 'revision':
-        result = sorted([str(x[0]) for x in fullResult],key=natural_key)
-    else:
+    if column == 'revision':
         result = []
         for revision,compile_res in fullResult:
             if revision == 0:
                 revision = 'original'
             if compile_res == 1:
-                result.append(str(revision)+' (compiled)')
+                result.append(str(revision)+' (c)')
             else:
-                result.append(str(revision)+' (did not compile)')
+                result.append(str(revision)+' (dnc)')
+    elif column == 'score':
+        result = [(str(x[1]),str(x[2])) for x in fullResult]
+    else:
+        result = sorted([str(x[0]) for x in fullResult],key=natural_key)
     #print(result)
 
     # disconnect from server
