@@ -69,6 +69,7 @@ def createDiff(origCode, newCode, db,cursor,table,
        # Rollback in case there is any error
        #print("rolling back db")
        db.rollback()
+    return revision + 1
 
 def saveCodeToDatabase(course, offering, assignment, problem, student, code, compileResult):
     # read the database settings file
@@ -98,11 +99,12 @@ def saveCodeToDatabase(course, offering, assignment, problem, student, code, com
     result = cursor.fetchone()
     origCode = result[0].decode('string_escape')
 
-    createDiff(origCode,code,db,cursor,settings['table'],
+    revision = createDiff(origCode,code,db,cursor,settings['table'],
             course,offering,assignment,problem,student,compileResult)
 
     # disconnect from server
     db.close()
+    return revision
 if __name__ == "__main__":
     form = cgi.FieldStorage() 
 
@@ -166,8 +168,8 @@ if __name__ == "__main__":
         compileOutput['returnCode'] = str(p.returncode)
 
     # save the diff to the database
-    saveCodeToDatabase(course, offering, assignment, problem, 
+    revision = saveCodeToDatabase(course, offering, assignment, problem, 
             student, code, compileErr == True)
 
     # print the output
-    print(json.dumps(compileOutput))
+    print(json.dumps((compileOutput,revision)))

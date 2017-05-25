@@ -65,7 +65,7 @@ function getRevision(studentsDir) {
         var revisions = data
         console.log(revisions)
         populateOptions("revision",revisions);
-        setSpinner(false);
+        revisionChanged();
     });
 }
 
@@ -175,9 +175,24 @@ function compileProg(runProg) {
     setSpinner(true);
     var code=editor.getValue();
     var timeout = $("#timeout")[0].value;
-    $.post("cgi-bin/compileCode.cgi", {'code' : code, 'run' : (runProg ? 'true' : 'false'), 'timeout' : timeout})
-        .done(function(compileOutput) {
+    var course = $("#course")[0].value;
+    var offering = $("#offering")[0].value;
+    var assignment = $("#assn")[0].value;
+    var problem = $("#problem")[0].value;
+    var student = $("#student")[0].value;
+    $.post("cgi-bin/compileCode.cgi", {'code' : code, 
+        'run' : (runProg ? 'true' : 'false'), 
+        'timeout' : timeout,
+        'course' : course,
+        'offering' : offering,
+        'assignment' : assignment,
+        'problem' : problem,
+        'student' : student })
+        .done(function(compileRet) {
+            compileOutput = compileRet[0];
+            revision = compileRet[1]; 
             console.log(compileOutput);
+            console.log(revision);
             //var current_cpp_console = cpp_console.getValue()
             var current_cpp_console = ""
             if(compileOutput['compileErrors'] == "") {
@@ -200,6 +215,14 @@ function compileProg(runProg) {
                 cpp_console.setValue(current_cpp_console+compileOutput['compileErrors']+'\n\n');
             }
             cpp_console.clearSelection();
+            // update revision opt and set to latest
+            var sel = $("#revision");
+            // remove all current options
+            var opt = document.createElement('option');
+            opt.value = revision;
+            opt.innerHTML = revision;
+            sel[0].appendChild(opt);
+            sel[0].value = revision; 
             setSpinner(false);
         });
 }
