@@ -18,7 +18,7 @@ function initCodeReview() {
 function getCourses(mainDir) {
     getDirInfo('course',mainDir,function(data) {
         var courses = data
-        console.log(courses)
+        //console.log(courses)
         populateOptions("course",courses);
         getOffering(courses[0]);
     });
@@ -27,7 +27,7 @@ function getCourses(mainDir) {
 function getOffering(courseDir) {
     getDirInfo('offering',courseDir,function(data) {
         var offering = data
-        console.log(offering)
+        //console.log(offering)
         populateOptions("offering",offering);
         getAssn(courseDir+'/'+offering[0]);
     });
@@ -36,7 +36,7 @@ function getOffering(courseDir) {
 function getAssn(offeringDir) {
     getDirInfo('assignment',offeringDir,function(data) {
         var assn = data
-        console.log(assn)
+        //console.log(assn)
         populateOptions("assn",assn);
         getProblems(offeringDir+'/'+assn[0]);
     });
@@ -45,7 +45,7 @@ function getAssn(offeringDir) {
 function getProblems(assnDir) {
     getDirInfo('problem',assnDir,function(data) {
         var problems = data
-        console.log(problems)
+        //console.log(problems)
         populateOptions("problem",problems);
         getStudents(assnDir+"/"+problems[0]);
     });
@@ -54,7 +54,7 @@ function getProblems(assnDir) {
 function getStudents(problemDir) {
     getDirInfo('student',problemDir,function(data) {
         var students = data
-        console.log(students)
+        //console.log(students)
         populateOptions("student",students);
         getRevision(problemDir+"/" + students[0])
     });
@@ -63,7 +63,7 @@ function getStudents(problemDir) {
 function getRevision(studentsDir) {
     getDirInfo('revision',studentsDir,function(data) {
         var revisions = data
-        console.log(revisions)
+        //console.log(revisions)
         populateOptions("revision",revisions);
         revisionChanged();
     });
@@ -158,7 +158,7 @@ function populateOptions(id,options) {
         .end();
     for (var i=0; i < options.length; i++) {
         var opt = document.createElement('option');
-        console.log(id);
+        //console.log(id);
         opt.value = options[i];
         opt.innerHTML = options[i];
         sel[0].appendChild(opt);
@@ -186,8 +186,8 @@ function compileProg(runProg) {
         .done(function(compileRet) {
             compileOutput = compileRet[0];
             revision = compileRet[1]; 
-            console.log(compileOutput);
-            console.log(revision);
+            //console.log(compileOutput);
+            //console.log(revision);
             //var current_cpp_console = cpp_console.getValue()
             var current_cpp_console = ""
             if(compileOutput['compileErrors'] == "") {
