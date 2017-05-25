@@ -118,7 +118,7 @@ function revisionChanged() {
     var problem = $("#problem")[0].value;
     var studentName = $("#student")[0].value;
     var revision = $("#revision")[0].value;
-    if (revision == 'original') {
+    if (revision.indexOf('original') == 0) {
        revision = '0'; // revert to numbers
     } 
 
@@ -159,13 +159,8 @@ function populateOptions(id,options) {
     for (var i=0; i < options.length; i++) {
         var opt = document.createElement('option');
         console.log(id);
-        if (id == 'revision' && i == 0) {
-            opt.value = 'original';
-            opt.innerHTML = 'original';
-        } else {
-            opt.value = options[i];
-            opt.innerHTML = options[i];
-        }
+        opt.value = options[i];
+        opt.innerHTML = options[i];
         sel[0].appendChild(opt);
     }
 }

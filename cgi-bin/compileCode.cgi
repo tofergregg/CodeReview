@@ -101,6 +101,10 @@ def saveCodeToDatabase(course, offering, assignment, problem, student, code, com
 
     revision = createDiff(origCode,code,db,cursor,settings['table'],
             course,offering,assignment,problem,student,compileResult)
+    if compileResult:
+        revision = str(revision) + " (compiled)"
+    else:
+        revision = str(revision) + " (did not compile)"
 
     # disconnect from server
     db.close()
@@ -119,7 +123,7 @@ if __name__ == "__main__":
     student = form.getvalue('student')
 
     if code==None:
-        code = '#include "error.h"\n#include<iostream>\nint main(){\n    int i=0;\nstd::cout<<"hello\\n";\n    return 0;\n}'
+        code = '#include "error.h"\n#include<iostream>\nint main(){\n    std::cout<<"hello\\n";\n    return 0;\n}'
     if run==None:
         run = False
     else:
@@ -155,6 +159,7 @@ if __name__ == "__main__":
 
     # only run if compiled correctly
     if run and compileErr == "":
+        origDir = os.getcwd()
         os.chdir(tempPath)
         p = subprocess.Popen(['timeout',str(timeout),tempPath+'code'], stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
@@ -166,10 +171,11 @@ if __name__ == "__main__":
         compileOutput['runOutput'] = runOut
         compileOutput['runErrors'] = runErr
         compileOutput['returnCode'] = str(p.returncode)
+        os.chdir(origDir)
 
     # save the diff to the database
     revision = saveCodeToDatabase(course, offering, assignment, problem, 
-            student, code, compileErr == True)
+            student, code, compileErr == "")
 
     # print the output
     print(json.dumps((compileOutput,revision)))

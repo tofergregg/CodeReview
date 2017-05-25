@@ -120,15 +120,32 @@ def requestDistinctValues(column, partialQuery):
     cursor = db.cursor()
 
     # Get latest change
-    # select * from revision_table where course='cs106b' and offering='1176' and assignment='midterm' and problem='p2' order by revision desc limit 1;
-    sql = "select distinct %s from `revision_table` %s" % (column,partialQuery)
+    # (old)select * from revision_table where course='cs106b' and offering='1176' and assignment='midterm' and problem='p2' order by revision desc limit 1;
+    # new: select distinct revision from `revision_table` where...
+    if column != 'revision':
+        sql = "select distinct %s from `revision_table` %s" % (column,partialQuery)
+    else:
+        # also return compile result if we ask for revision
+        sql = "select distinct %s,compile_result from `revision_table` %s" % (column,partialQuery)
     #print(sql)
     #try:
     # Execute the SQL command
     cursor.execute(sql)
     
     # get all result
-    result = [str(x[0]) for x in cursor.fetchall()]
+    fullResult = cursor.fetchall()
+    #print(fullResult)
+    if column != 'revision':
+        result = sorted([str(x[0]) for x in fullResult],key=natural_key)
+    else:
+        result = []
+        for revision,compile_res in fullResult:
+            if revision == 0:
+                revision = 'original'
+            if compile_res == 1:
+                result.append(str(revision)+' (compiled)')
+            else:
+                result.append(str(revision)+' (did not compile)')
     #print(result)
 
     # disconnect from server
@@ -144,8 +161,7 @@ if __name__ == "__main__":
     column = form.getvalue('column')
     partialQuery = processQueryForMySql(column, form)
 
-    distinctValues = requestDistinctValues(column,partialQuery)
-    queryResult = sorted(distinctValues,key=natural_key)
+    queryResult = requestDistinctValues(column,partialQuery)
 
     print("Content-Type: text/json\n")
     print(json.dumps(queryResult))
