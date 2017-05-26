@@ -90,7 +90,7 @@ def saveCodeToDatabase(course, offering, assignment, problem, student, code, com
                                                 problem='%s' and \
                                                 revision='0'" \
                                                 % (student,course,offering,assignment,problem)
-    print(sql)
+    #print(sql)
     #try:
     # Execute the SQL command
     cursor.execute(sql)
