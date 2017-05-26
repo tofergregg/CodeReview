@@ -60,7 +60,10 @@ if __name__ == "__main__":
     # we must patch the diff and return the patched file
 
     # get original
-    sql = "select text from `revision_table` where student='%s' and \
+    if unique_compile:
+        sql = "select text from `revision_table` where unique_compile='%s'" % (unique_compile)
+    else:
+        sql = "select text from `revision_table` where student='%s' and \
                                                 course='%s' and \
                                                 offering='%s' and \
                                                 assignment='%s' and \
@@ -75,7 +78,7 @@ if __name__ == "__main__":
     # get all result
     origCode = cursor.fetchall()[0][0].decode('string_escape')
 
-    if revision == '0':
+    if revision == '0' or unique_compile:
         print(origCode)
     else:
         # get the revision we want

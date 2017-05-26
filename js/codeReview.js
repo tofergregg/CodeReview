@@ -80,6 +80,7 @@ function getSolutions(problemDir) {
         var students = data
         //console.log(students)
         populateSolutionsOptions("closeCode",students);
+        solutionChanged();
     });
 }
 
@@ -150,6 +151,20 @@ function revisionChanged() {
         });
 }
 
+function solutionChanged() {
+    // start spinner
+    setSpinner(true);
+    var unique_compile = $("#closeCode")[0].value;
+    if (unique_compile != "") {
+        $.post("cgi-bin/loadStudent.cgi", {"unique_compile" : unique_compile, 'revision' : '0'}).done(function(data) {
+            good_code_console.setValue(data);
+            good_code_console.clearSelection();
+            // stop spinner
+            setSpinner(false);
+        });
+    }
+}
+
 function setSpinner(value) {
     var spinner = $("#spinner")[0];
     spinner.style.visibility = (value == true ? 'visible' : 'hidden');
@@ -162,7 +177,7 @@ function setSpinner(value) {
 
 function getDirInfo(column, dir, callBack) {
     $.post( "cgi-bin/listParts.cgi", { "column" : column, "searchDir" : dir })
-      .done(callBack);
+        .done(callBack);
 }
 
 function populateOptions(id,options) {
@@ -226,29 +241,29 @@ function compileProg(runProg) {
                 // print run output if necessary
                 if (runProg) {
                     current_cpp_console = cpp_console.getValue()
-                    cpp_console.setValue(current_cpp_console
-                        +'Run output:\n'
-                        +compileOutput['runOutput']
-                        +'\n\nRun errors:\n'
-                        +compileOutput['runErrors']
-                        +'\n\nTimed out? '
-                        +(compileOutput['returnCode'] == '124' ? 'TIMED OUT' : 'No')
-                        +'\n\n');
+            cpp_console.setValue(current_cpp_console
+                +'Run output:\n'
+                +compileOutput['runOutput']
+                +'\n\nRun errors:\n'
+                +compileOutput['runErrors']
+                +'\n\nTimed out? '
+                +(compileOutput['returnCode'] == '124' ? 'TIMED OUT' : 'No')
+                +'\n\n');
 
                 }
             } else {
                 cpp_console.setValue(current_cpp_console+compileOutput['compileErrors']+'\n\n');
             }
-            cpp_console.clearSelection();
-            // update revision opt and set to latest
-            var sel = $("#revision");
-            // remove all current options
-            var opt = document.createElement('option');
-            opt.value = revision;
-            opt.innerHTML = revision;
-            sel[0].appendChild(opt);
-            sel[0].value = revision; 
-            setSpinner(false);
+        cpp_console.clearSelection();
+        // update revision opt and set to latest
+        var sel = $("#revision");
+        // remove all current options
+        var opt = document.createElement('option');
+        opt.value = revision;
+        opt.innerHTML = revision;
+        sel[0].appendChild(opt);
+        sel[0].value = revision; 
+        setSpinner(false);
         });
 }
 
