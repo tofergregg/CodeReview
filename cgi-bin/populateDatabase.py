@@ -120,7 +120,7 @@ def processAll(args):
         escCode = db.escape_string(code.decode("utf8").encode('ascii',errors='ignore'))
         sql = "INSERT INTO %s \
                (course, offering, assignment, problem, student, modified_by, \
-               compile_result, was_run, timed_out, timeout, diff, \
+               compile_result, score, timed_out, timeout, diff, \
                text, keystrokes, revision) \
                VALUES ('%s', '%s', '%s', '%s', '%s', 'cgregg', \
                        '%s', '0', '0', '5', '0', \

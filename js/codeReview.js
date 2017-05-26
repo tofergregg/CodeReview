@@ -79,7 +79,7 @@ function getSolutions(problemDir) {
     getDirInfo('score',problemDir,function(data) {
         var students = data
         //console.log(students)
-        populateOptions("closeCode",students);
+        populateSolutionsOptions("closeCode",students);
     });
 }
 
@@ -176,6 +176,21 @@ function populateOptions(id,options) {
         //console.log(id);
         opt.value = options[i];
         opt.innerHTML = options[i];
+        sel[0].appendChild(opt);
+    }
+}
+
+function populateSolutionsOptions(id,options) {
+    var sel = $("#"+id);
+    // remove all current options
+    sel.find('option')
+        .remove()
+        .end();
+    for (var i=0; i < options.length; i++) {
+        var opt = document.createElement('option');
+        // should be an array with two indices
+        opt.value = options[i][1];
+        opt.innerHTML = options[i][0];
         sel[0].appendChild(opt);
     }
 }

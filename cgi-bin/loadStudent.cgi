@@ -43,7 +43,8 @@ if __name__ == "__main__":
     assignment = form.getvalue('assignment')
     problem = form.getvalue('problem')
     student = form.getvalue('studentName')
-    revision = form.getvalue('revision')
+    revision = form.getvalue('revision').split(' ')[0] # could be in the form: 1 (c)
+    unique_compile = form.getvalue('unique_compile')
 
     print("Content-Type: text/plain\n")
     # read the database settings file
