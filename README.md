@@ -13,7 +13,7 @@ not in the WWW directory). Permissions must be set through corn:
 1. Log into Corn (no fsr command on myth...):
 
 2.
-$ fsr sa CodeReview ${USER}.cgi rlidwka
+$ fsr sa CodeReview ${USER}.cgi rl
 $ fsr sa CodeReview system:www-servers rl
 
 3. For internal cgi-bin folders, you must set ${USER}.cgi to just rl:
