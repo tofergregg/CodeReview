@@ -10,6 +10,8 @@ COURSE_DIR="../course/"
 BUILD_DIR=COURSE_DIR+"build/"
 DEFAULT_TIMEOUT = 5
 SETTINGS_FILE = "../settings/settings.txt"
+JAVA_CLASS_NAME = "Code"
+JAVA_INTERFACE = "ConsoleProgram" #TODO: can be console program, or graphics program etc  
 
 def createDiff(origCode, newCode, db,cursor,table,
         course, offering, assignment, problem, student, compileResult):
@@ -17,7 +19,7 @@ def createDiff(origCode, newCode, db,cursor,table,
     """
     # create a temp directory
     tempPath = tempfile.mkdtemp()+'/'
-    
+
     # save original code
     with open(tempPath+"/origCode.cpp","w") as f:
         f.write(origCode+'\n')
@@ -103,15 +105,15 @@ def saveCodeToDatabase(course, offering, assignment, problem, student, code, com
             course,offering,assignment,problem,student,compileResult)
     if compileResult:
         revision = str(revision) + " (c)"
-    else:
-        revision = str(revision) + " (dnc)"
-
-    # disconnect from server
-    db.close()
-    return revision
-if __name__ == "__main__":
-    form = cgi.FieldStorage() 
-
+    else:(
+            revision = str(revision) + " (dnc)"
+    
+        # disconnect from server
+        db.close()
+        return revision
+    if __name__ == "__main__":
+        form = cgi.FieldStorage()
+    )
     # Get data from fields
     code = form.getvalue('code')
     run = form.getvalue('run')
@@ -121,18 +123,21 @@ if __name__ == "__main__":
     assignment = form.getvalue('assignment')
     problem = form.getvalue('problem')
     student = form.getvalue('student')
-
+    course = form.getvalue('course')
     if code==None:
-        code = '#include "error.h"\n#include<iostream>\nint main(){\n    std::cout<<"hello\\n";\n    return 0;\n}'
+        if course == 'cs106b':
+            code = '#include "error.h"\n#include<iostream>\nint main(){\n    std::cout<<"hello\\n";\n    return 0;\n}'
+        else:
+            code = '#import acm.program.*;\nimport java.util.*;\npublic class '+JAVA_CLASS_NAME+' extends ConsoleProgram{\n    public void run(){\n        print("hello");\n    }\n}'
     if run==None:
         run = False
     else:
         run = (run == 'true')
 
     if timeout==None:
-        timeout = DEFAULT_TIMEOUT 
+        timeout = DEFAULT_TIMEOUT
     else:
-        timeout = int(timeout) 
+        timeout = int(timeout)
 
     print("Content-Type: text/json\n")
 
@@ -144,21 +149,33 @@ if __name__ == "__main__":
     tempPath = tempfile.mkdtemp()+'/'
 
     # put the code there
-    with open(tempPath+"code.cpp","w") as f:
-        f.write(code+'\n')
+    if course == 'cs106b':
+        with open(tempPath+"code.cpp","w") as f:
+            f.write(code+'\n')
+    else:
+        with open(tempPath+"Code.java", "w") as f:
+            f.write(code+'\n')
 
     # make the code, and capture all output
     # first, change directory to the build directory
     os.chdir('../build')
 
     # run the build command
-    p = subprocess.Popen(['make', 'PROG='+tempPath+'code'], stdout=subprocess.PIPE, 
+    if course == 'cs106b':
+        p = subprocess.Popen(['make', 'PROG='+tempPath+'code'], stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
+    else:
+        p1 = subprocess.Popen(['pwd'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        pwd, err = p1.communicate()
+        pwd = pwd.strip()
+        p = subprocess.Popen(['javac', '-classpath', '".:'+pwd+'/acm.jar"', tempPath+'/code.java'],
+                                        stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    
     compileOut, compileErr = p.communicate()
     compileOutput = {'compileOutput':compileOut, 'compileErrors':compileErr, 'tempPath':tempPath}
 
-    # only run if compiled correctly
-    if run and compileErr == "":
+    # only run if cs106b and if compiled correctly
+    if run and course == 'cs106b' and compileErr == "" :
         origDir = os.getcwd()
         os.chdir(tempPath)
         p = subprocess.Popen(['timeout',str(timeout),tempPath+'code'], stdout=subprocess.PIPE,
@@ -174,7 +191,7 @@ if __name__ == "__main__":
         os.chdir(origDir)
 
     # save the diff to the database
-    revision = saveCodeToDatabase(course, offering, assignment, problem, 
+    revision = saveCodeToDatabase(course, offering, assignment, problem,
             student, code, compileErr == "")
 
     # print the output
