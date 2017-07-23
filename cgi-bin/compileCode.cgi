@@ -105,15 +105,16 @@ def saveCodeToDatabase(course, offering, assignment, problem, student, code, com
             course,offering,assignment,problem,student,compileResult)
     if compileResult:
         revision = str(revision) + " (c)"
-    else:(
-            revision = str(revision) + " (dnc)"
+    else:
+        revision = str(revision) + " (dnc)"
     
-        # disconnect from server
-        db.close()
-        return revision
-    if __name__ == "__main__":
-        form = cgi.FieldStorage()
-    )
+    # disconnect from server
+    db.close()
+
+    return revision
+
+if __name__ == "__main__":
+    form = cgi.FieldStorage()
     # Get data from fields
     code = form.getvalue('code')
     run = form.getvalue('run')
