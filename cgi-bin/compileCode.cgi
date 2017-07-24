@@ -153,27 +153,26 @@ if __name__ == "__main__":
     if course == 'cs106b':
         with open(tempPath+"code.cpp","w") as f:
             f.write(code+'\n')
-    else:
-        with open(tempPath+"Code.java", "w") as f:
-            f.write(code+'\n')
-
     # make the code, and capture all output
     # first, change directory to the build directory
-    os.chdir('../build')
+        os.chdir('../build')
 
     # run the build command
-    if course == 'cs106b':
         p = subprocess.Popen(['make', 'PROG='+tempPath+'code'], stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
-    else:
+        compileOut, compileErr = p.communicate()
+        compileOutput = {'compileOutput':compileOut, 'compileErrors':compileErr, 'tempPath':tempPath}
+
+    elif course == 'cs106a':
+    #do same as above, but for Java code
+        with open(tempPath+"Code.java", "w") as f:
+            f.write(code+'\n')
         p1 = subprocess.Popen(['pwd'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         pwd, err = p1.communicate()
         pwd = pwd.strip()
-        p = subprocess.Popen(['javac', '-classpath', '".:'+pwd+'/acm.jar"', tempPath+'/code.java'],
-                                        stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-    
-    compileOut, compileErr = p.communicate()
-    compileOutput = {'compileOutput':compileOut, 'compileErrors':compileErr, 'tempPath':tempPath}
+        p = subprocess.Popen(['javac', '-classpath', '".:'+pwd+'/acm.jar"', tempPath+'/Code.java'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        compileOut, compileErr = p.communicate()
+        compileOutput = {'compileOutput':compileOut, 'compileErrors':compileErr, 'tempPath':tempPath}
 
     # only run if cs106b and if compiled correctly
     if run and course == 'cs106b' and compileErr == "" :
