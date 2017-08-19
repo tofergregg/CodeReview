@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "base64.h"
 #include "basicgraph.h"
 #include "bitstream.h"
