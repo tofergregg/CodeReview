@@ -844,6 +844,7 @@ void Graph<NodeType, ArcType>::removeNode(NodeType* node) {
         removeArc(arc);
     }
     nodes.remove(node);
+    nodeMap.remove(node->name);
 }
 
 /*

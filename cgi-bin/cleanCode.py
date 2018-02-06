@@ -16,6 +16,14 @@ def cleanChar(c):
         return 'i'
     if ord(c) == 8230:
         return '...'
+    if ord(c) ==u'\uff1d':
+        return '='
+    if ord(c) == 65307:
+        return ';'
+    if ord(c) == 65373:
+        return '}'
+    if ord(c) == 8211:
+        return '-'
 
 cleaned = u''
 if __name__ == "__main__":
@@ -23,7 +31,12 @@ if __name__ == "__main__":
         origFile = f.read()
     for c in origFile:
         #print(repr(c))
-        #print c,ord(c)
+        if c == u'\uff1d':
+            c = '='
+        if c == u'\uff5b':
+            c = '{'
+        print c,ord(c)
+        if (c == '-'): quit()
         if ord(c) > 126:
             #print c,ord(c)
             #print cleanChar(c),ord(c)
