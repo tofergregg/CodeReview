@@ -10,7 +10,7 @@ In order for the files to work on the Stanford web server, the entire repository
 should be placed into the `cgi-bin` folder in a user's top-level directory (i.e,
 not in the WWW directory). Permissions must be set through corn:
 
-1. Log into Corn (no fsr command on myth...):
+1. Log into Cardinal (no fsr command on myth...):
 
 2.
 $ fsr sa CodeReview ${USER}.cgi rl
