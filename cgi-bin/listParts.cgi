@@ -166,6 +166,10 @@ if __name__ == "__main__":
 
     queryResult = requestDistinctValues(column,partialQuery)
 
+    # reverse the order of column if it is offering (to put in numerical order)
+    if column == "offering":
+        queryResult = queryResult[::-1]
+
     print("Content-Type: text/json\n")
     print(json.dumps(queryResult))
 

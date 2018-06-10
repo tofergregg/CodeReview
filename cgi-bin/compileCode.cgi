@@ -119,17 +119,20 @@ if __name__ == "__main__":
     code = form.getvalue('code')
     run = form.getvalue('run')
     timeout = form.getvalue('timeout')
-    course = form.getvalue('course')
     offering = form.getvalue('offering')
     assignment = form.getvalue('assignment')
     problem = form.getvalue('problem')
     student = form.getvalue('student')
     course = form.getvalue('course')
+    if course == None:
+        course = 'cs107'
     if code==None:
         if course == 'cs106b':
-            code = '#include "error.h"\n#include<iostream>\nint main(){\n    std::cout<<"hello\\n";\n    return 0;\n}'
-        else:
+            code = '#include "error.h"\n#include<iostream>\nint main(){\n    std::cout<<"hello\\n";\n    return 0;\n}\n'
+        elif course == 'cs106a':
             code = '#import acm.program.*;\nimport java.util.*;\npublic class '+JAVA_CLASS_NAME+' extends ConsoleProgram{\n    public void run(){\n        print("hello");\n    }\n}'
+        elif course == 'cs107':
+            code ='//file: compileCode.cgi\n#include<stdio.h>\n#include<stdlib.h>\n\nint main(int argc, char **argv)\n{\n    printf("Hello, World!\\n";\n    return 0;\n}\n'
     if run==None:
         run = False
     else:
@@ -153,8 +156,11 @@ if __name__ == "__main__":
     if course == 'cs106b':
         with open(tempPath+"code.cpp","w") as f:
             f.write(code+'\n')
-    else:
+    elif course == 'cs106a':
         with open(tempPath+"Code.java", "w") as f:
+            f.write(code+'\n')
+    elif course == 'cs107':
+        with open(tempPath+"code.c","w") as f:
             f.write(code+'\n')
 
     # make the code, and capture all output
@@ -165,18 +171,37 @@ if __name__ == "__main__":
     if course == 'cs106b':
         p = subprocess.Popen(['make', 'PROG='+tempPath+'code'], stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE)
-    else:
+    elif course == 'cs106a':
         p1 = subprocess.Popen(['pwd'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         pwd, err = p1.communicate()
         pwd = pwd.strip()
         p = subprocess.Popen(['javac', '-classpath', '".:'+pwd+'/acm.jar"', tempPath+'/code.java'],
                                         stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    elif course == 'cs107':
+        p = subprocess.Popen(['make', '-f', '107Makefile', 'PROG='+tempPath+'code'], stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
     
     compileOut, compileErr = p.communicate()
     compileOutput = {'compileOutput':compileOut, 'compileErrors':compileErr, 'tempPath':tempPath}
 
-    # only run if cs106b and if compiled correctly
+    # only run for cs106b if the program compiled correctly
     if run and course == 'cs106b' and compileErr == "" :
+        origDir = os.getcwd()
+        os.chdir(tempPath)
+        p = subprocess.Popen(['timeout',str(timeout),tempPath+'code'], stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+        runOut, runErr = p.communicate()
+        if runOut == "":
+            runOut = "[no output]"
+        if runErr == "":
+            runErr = "[none]"
+        compileOutput['runOutput'] = runOut
+        compileOutput['runErrors'] = runErr
+        compileOutput['returnCode'] = str(p.returncode)
+        os.chdir(origDir)
+
+    # only run for cs107 if the program compiled correctly
+    if run and course == 'cs107' and compileErr == "" :
         origDir = os.getcwd()
         os.chdir(tempPath)
         p = subprocess.Popen(['timeout',str(timeout),tempPath+'code'], stdout=subprocess.PIPE,

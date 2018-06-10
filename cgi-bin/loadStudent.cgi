@@ -16,7 +16,7 @@ def patchCode(code,diff):
     tempPath = tempfile.mkdtemp()+'/'
     
     # save original code
-    with open(tempPath+"/code.cpp","w") as f:
+    with open(tempPath+"/code.c","w") as f:
         f.write(code+'\n')
 
     # save new code
@@ -25,12 +25,12 @@ def patchCode(code,diff):
 
     # run the patch command
     cat = subprocess.Popen(['cat',tempPath+'/code.pat'],stdout=subprocess.PIPE)
-    patch = subprocess.check_output(['patch', tempPath+'code.cpp'],
+    patch = subprocess.check_output(['patch', tempPath+'code.c'],
             stdin=cat.stdout)
     cat.wait()
 
     # read in patched file
-    with open(tempPath+"/code.cpp","r") as f:
+    with open(tempPath+"/code.c","r") as f:
         newCode = f.read()
     return newCode 
     
@@ -76,7 +76,9 @@ if __name__ == "__main__":
     cursor.execute(sql)
 
     # get all result
-    origCode = cursor.fetchall()[0][0].decode('string_escape')
+    escapedCode = cursor.fetchall()[0][0]
+    #origCode = escapedCode.decode('string_escape')
+    origCode = escapedCode # hmm...we might need to deal with this
 
     if revision == '0' or unique_compile:
         print(origCode)

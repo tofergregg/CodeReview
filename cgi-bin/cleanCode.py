@@ -35,8 +35,8 @@ if __name__ == "__main__":
             c = '='
         if c == u'\uff5b':
             c = '{'
-        print c,ord(c)
-        if (c == '-'): quit()
+        #print c,ord(c)
+        #if (c == '-'): quit()
         if ord(c) > 126:
             #print c,ord(c)
             #print cleanChar(c),ord(c)

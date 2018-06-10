@@ -32,7 +32,7 @@ def parse_arguments():
 
 def mergeCode(studentCode, testCode):
     # create template that starts with including all Stanford lib headers
-    template = '#include "allStanfordHeaders.h"\n'
+    template = ''
 
     template += testCode 
 
@@ -57,13 +57,17 @@ def compileCode(tempPath,code):
     os.chdir('../build')
 
     # run the build command
-    p = subprocess.Popen(['make', 'PROG='+tempPath+'code'], stdout=subprocess.PIPE, 
+    print(tempPath)
+    p = subprocess.Popen(['make', '-f', 'Makefile', 'PROG='+tempPath+'code'], stdout=subprocess.PIPE, 
                                        stderr=subprocess.PIPE)
     compileOut, compileErr = p.communicate()
+    print(compileOut)
+    print(compileErr)
     return compileErr == ""
 
 def addToDatabase():
     pass
+
 def processAll(args,inputProblems):
     """ For each student code response in the problem folder,
         create a full program, compile, and populate the mysql
@@ -95,7 +99,7 @@ def processAll(args,inputProblems):
         # read in json for student
         with open(args.problem_folder+'/'+student) as f:
             studentData = json.loads(f.read())
-            problems = [x for x in studentData.keys() if x.startswith("Problem")]
+            problems = [x['id'] for x in studentData['answerInfo']['problems']]
         print("student: %s, problems:%s" % (student,str(problems)))
         for problem in problems:
             if not problem in inputProblems: continue
@@ -119,7 +123,7 @@ def processAll(args,inputProblems):
             filename = args.problem_folder+'/'+student
             
             # get the code for this problem
-            code = studentData[problem]
+            code = [x['answer'] for x in studentData['answerInfo']['problems'] if x['id'] == problem][0]
 
             # merge it
             code = mergeCode(code,testCode)
@@ -175,7 +179,7 @@ def parseProblems(problemString):
     """ problemString should be in the form
     [1,2,3]"""
     problemString = problemString[1:-1] # strip brackets
-    return ["Problem " + x for x in problemString.split(',')]
+    return [x for x in problemString.split(',')]
     
 if __name__ == "__main__":
     args = parse_arguments()
